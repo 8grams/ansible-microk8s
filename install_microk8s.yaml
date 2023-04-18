@@ -1,0 +1,35 @@
+- name: Install microk8s
+  become: yes
+  hosts: microk8s
+  tasks:
+    - community.general.snap:
+        classic: true
+        channel: 1.26
+        name:
+          - microk8s
+
+- name: Adding user to group
+  become: yes
+  hosts: microk8s
+  tasks:
+    - user:
+        name: egrams
+        groups: microk8s
+        append: yes
+    - meta: reset_connection
+
+- name: Change kube folder ownership
+  become: yes
+  hosts: microk8s
+  tasks:
+    - file:
+        path: /home/egrams/.kube
+        owner: egrams
+        group: egrams
+        state: directory
+
+- name: Enable microk8s common modules
+  hosts: microk8s
+  tasks: 
+    - command: microk8s enable dns cert-manager ingress hostpath-storage
+      become: yes

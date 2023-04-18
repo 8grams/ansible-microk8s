@@ -1,0 +1,4 @@
+microk8s:
+  hosts:
+    vm01:
+      ansible_host: 88.888.888.8
